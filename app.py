@@ -13,7 +13,7 @@ def square():
 
 
 @app.route("/triple", methods=["GET"])
-def square():
+def triple():  # <-- Changez le nom de la fonction ici
     try:
         n = float(request.args.get("n"))
         return jsonify({"input": n, "result": n**3})
@@ -22,4 +22,4 @@ def square():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5005)

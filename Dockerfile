@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py .
 
 # Port exposé
-EXPOSE 5000
+EXPOSE 5005
 
 # Commande de démarrage
 CMD ["python", "app.py"]
