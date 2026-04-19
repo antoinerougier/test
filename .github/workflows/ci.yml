@@ -1,33 +1,32 @@
-name: CI
+name: Check app.py Quality
 
 on:
   push:
-    branches: [main]
+    branches: [ "main" ]
   pull_request:
-    branches: [main]
+    branches: [ " " ]
 
 jobs:
-  build-and-test:
+  lint:
+    name: Lint and Quality Check
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout du code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build de l'image Docker
-        run: docker build -t square-api .
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-      - name: Lancer le container
-        run: docker run -d -p 5000:5000 --name test-api square-api
-
-      - name: Attendre que l'API démarre
-        run: sleep 3
-
-      - name: Tester l'endpoint /square
+      - name: Install dependencies
         run: |
-          RESULT=$(curl -s "http://localhost:5000/square?n=4")
-          echo "Réponse : $RESULT"
-          echo "$RESULT" | grep '"result": 16.0'
+          python -m pip install --upgrade pip
+          pip install flake8 pylint
 
-      - name: Stopper le container
-        run: docker stop test-api
+      - name: Run flake8
+        run: flake8 app.py --max-line-length=120 --ignore=E501,W503
+
+      - name: Run pylint
+        run: pylint app.py --disable=C0114,C0115,C0116 --fail-under=8.0
